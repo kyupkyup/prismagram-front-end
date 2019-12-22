@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AuthPresenter from "./AuthPresenter";
 import useInput from "../../Hooks/useInput";
 import { useMutation } from "react-apollo-hooks";
-import { LOG_IN, CREATE_ACCOUNT, CONFIRM_SECRET } from "./AuthQueries";
+import { LOG_IN, CREATE_ACCOUNT, CONFIRM_SECRET, LOCAL_LOG_IN } from "./AuthQueries";
 import { toast } from "react-toastify";
 
 export default () => { 
@@ -12,6 +12,7 @@ export default () => {
   const lastname = useInput("");
   const secret = useInput("");
   const email = useInput("");
+
   const [requestSecretMutation] = useMutation(LOG_IN, {
     variables: { email: email.value }
   });
@@ -32,6 +33,9 @@ export default () => {
     }
   });
 
+  const [localLogInMutation] =useMutation(LOCAL_LOG_IN)
+
+  
   const onSubmit = async e => {
     e.preventDefault();
     if (action === "logIn") {
@@ -45,7 +49,6 @@ export default () => {
             setTimeout(() => setAction("signUp"), 2000);
           }
           else{
-            console.log(requestSecret);
             toast.success("Check your inbox for your login secret");
             setAction("confirm");
           }
@@ -65,12 +68,12 @@ export default () => {
         try {
           const createAccount = await createAccountMutation();
           if (!createAccount) {
-            toast.error("계정을 생성할 수 없습니다. 다시 시도해주세요. ");
+            toast.error("계정을 생성할 수 없습니다. 다시 시도해주세요. !!");
           } else {
             toast.success("계정이 생성되었습니다! 로그인 해주세요.");
             setTimeout(() => setAction("logIn"), 3000);
           }
-        } catch {
+        } catch (e){
           toast.error("계정을 생성할 수 없습니다. 다시 시도해주세요.");
         }
       } else {
@@ -79,7 +82,10 @@ export default () => {
     }else if(action === "confirm"){
        if(secret.value !== ""){
          try{
-             const {data : {confirmSecret}} = await confirmSecretMutation();
+             const {data : {confirmSecret:token}} = await confirmSecretMutation();
+            if(token!=="" && token !== undefined){
+              localLogInMutation({variables:{token}})
+            }
          }
          catch{
           toast.error("Can't confirm secret");
