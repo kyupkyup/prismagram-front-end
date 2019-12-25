@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   max-width: ${props => props.theme.maxWidth};
   margin: 0 auto;
   width: 100%;
+  height:auto;
 `;
 
 export default () => {

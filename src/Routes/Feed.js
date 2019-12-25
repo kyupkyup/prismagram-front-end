@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import Helmet from "react-helmet";
+
 import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 import Loader from "../Components/Loader";
@@ -11,7 +13,7 @@ const FEED_QUERY = gql`
       id
       location
       caption
-      user {
+      author {
         id
         userName
         avatar
@@ -20,7 +22,7 @@ const FEED_QUERY = gql`
         id
         url
       }
-      
+        isLiked
       comments {
         id
         text
@@ -29,7 +31,7 @@ const FEED_QUERY = gql`
           userName
         }
       }
-      isLiked
+      likeCount
       createdAt
     }
   }
@@ -39,16 +41,14 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 50vh;
+  min-height: 80vh;
 `;
 
 export default () => {
   const { data, loading } = useQuery(FEED_QUERY);
-  console.log(data);
-
   return (
     <Wrapper>
-      <title>Feed | Prismagram</title>
+      <Helmet><title>Feed | Prismagram</title></Helmet>
       {loading && <Loader />}
       {!loading &&
         data &&
@@ -59,14 +59,15 @@ export default () => {
             id={post.id}
             location = {post.location}
             caption = {post.caption}
-            user={post.user}
+            author={post.author}
             files={post.files}
             likeCount={post.likeCount}
             isLiked={post.isLiked}
             comments={post.comments}
             createdAt={post.createdAt}
           />
-        ))} 
+        ))}
+        
     </Wrapper>
   );
 };

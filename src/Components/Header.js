@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import Input from "./Input";
-import {gql} from "apollo-boost";
+import { gql } from "apollo-boost";
 import useInput from "../Hooks/useInput";
 import {
   InstaIcon,
@@ -24,7 +24,7 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   padding: 25px 0;
-  z-index:2;
+  z-index: 2;
 `;
 
 const HeaderWrapper = styled.div`
@@ -67,14 +67,14 @@ const HeaderLink = styled(Link)`
 `;
 
 const ME = gql`
-   {
-       me{
-            userName
-        }
-   }
+  {
+    me {
+      userName
+    }
+  }
 `;
 
-export default withRouter(({history}) => {
+export default withRouter(({ history }) => {
   const search = useInput("");
   const onSearchSubmit = e => {
     e.preventDefault();
@@ -82,7 +82,7 @@ export default withRouter(({history}) => {
   };
   const meQuery = useQuery(ME);
   console.log(meQuery);
-  return (  
+  return (
     <Header>
       <HeaderWrapper>
         <HeaderColumn>
@@ -91,8 +91,12 @@ export default withRouter(({history}) => {
           </Link>
         </HeaderColumn>
         <HeaderColumn>
-          <form onSubmit = {onSearchSubmit}>
-            <SearchInput {...search} placeholder="Search" />
+          <form onSubmit={onSearchSubmit}>
+            <SearchInput
+              value={search.value}
+              onChange={search.onChange}
+              placeholder="Search"
+            />
           </form>
         </HeaderColumn>
 
