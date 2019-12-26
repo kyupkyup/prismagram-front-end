@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import Input from "./Input";
-import { gql } from "apollo-boost";
 import useInput from "../Hooks/useInput";
 import {
   InstaIcon,
@@ -13,6 +12,8 @@ import {
   Message
 } from "./Icons";
 import { useQuery } from "react-apollo-hooks";
+import { ME } from "../SharedQueries";
+import Loader from "./Loader"
 
 const Header = styled.header`
   width: 100%;
@@ -66,24 +67,18 @@ const HeaderLink = styled(Link)`
   }
 `;
 
-const ME = gql`
-  {
-    me {
-      userName
-    }
-  }
-`;
+
 
 export default withRouter(({ history }) => {
   const search = useInput("");
+  const {data, loading} = useQuery(ME);
   const onSearchSubmit = e => {
     e.preventDefault();
     history.push(`/search?term=${search.value}`);
   };
-  const meQuery = useQuery(ME);
-  console.log(meQuery);
+
   return (
-    <Header>
+    <Header>  
       <HeaderWrapper>
         <HeaderColumn>
           <Link to="/">
@@ -105,13 +100,18 @@ export default withRouter(({ history }) => {
             <Compass />
           </HeaderLink>
 
-          <HeaderLink to="/">
-            <HeartEmpty />
-          </HeaderLink>
-
-          <HeaderLink to="/">
+        {loading &&<Loader/> }
+        {
+          data && data.me ? (         
+          <HeaderLink to={data.me.userName}>
+            <Person />
+          </HeaderLink> 
+          ) : (
+          <HeaderLink to="/#">
             <Person />
           </HeaderLink>
+          )
+        }
 
           <HeaderLink to="/">
             <Message />

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TextareaAutoSize from "react-autosize-textarea";
 import FatText from "../FatText";
 import Avatar from "../Avatar";
+import {Link} from "react-router-dom"
 import { HeartEmpty, HeartFull, Comment as CommentIcon} from "../Icons";
 
 const Post = styled.div`
@@ -11,6 +12,9 @@ const Post = styled.div`
   max-width: 600px;
   margin-bottom: 25px;
   user-select: none;
+  a{  
+    color:inherit;
+  }
 `;
 
 const Header = styled.header`
@@ -20,7 +24,7 @@ const Header = styled.header`
 `;
 
 const UserColumn = styled.div`
-  margin-left: 5px;
+  margin-left: 10px;
 `;
 
 const Location = styled.span`
@@ -105,6 +109,9 @@ const Comment = styled.li`
   margin-right:5px;
   }
 `;
+const Caption = styled.div`
+  margin: 15px 0px;
+`;
 
 export default ({
   author: { userName, avatar },
@@ -125,7 +132,9 @@ export default ({
     <Header>
       <Avatar size="sm" url={avatar} className="" />
       <UserColumn>
-        <FatText text={userName}></FatText>
+        <Link to={`/${userName}`}>
+          <FatText text={userName}></FatText>
+        </Link>
         <Location>{location}</Location>
       </UserColumn>
     </Header>
@@ -145,6 +154,9 @@ export default ({
         </Button>
       </Buttons>
       <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
+      <Caption>
+        <FatText text={userName} /> {caption}
+      </Caption>
       {comments && (
         <Comments>
           {comments.map(comment => (

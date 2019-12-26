@@ -13,12 +13,15 @@ const LoggedInRoutes = () => (
     <Route path="/explores" component={Explores}/>
     <Route path="/search" component={Search}/>
     <Route path="/:userName" component={Profile}/>
+    <Redirect from="*" to="/" />
   </Switch>
 );
 
 const LoggedOutRoutes = () => (
   <Switch>
     <Route exact path="/" component={Auth} />
+    <Redirect from="*" to="/" />
+
   </Switch>
 );
 

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import PostPresenter from "./PostPresenter";
 import PropTypes from "prop-types";
 import useInput from "../../Hooks/useInput";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
 import { toast } from "react-toastify";
+import { ME } from "../../SharedQueries"
 const PostContainer = ({
   id,
   author,
@@ -21,6 +22,7 @@ const PostContainer = ({
   const [currentItem, setCurrentItem] = useState(0);
   const [selfComments, setSelfComments] = useState([]);
   const comment = useInput("");
+  const { data: meQuery } = useQuery(ME);
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
     variables: { postId: id }
   });
@@ -52,22 +54,36 @@ const PostContainer = ({
     }
   };
 
-  const onKeyPress = event => {
+  const onKeyPress = async(event) => {
     const { which } = event;
 
     if (which === 13) {
       event.preventDefault();
-      comment.setValue("");
-      addCommentMutation();
+
+      try{
+          await addCommentMutation();
+      }
+      catch{
+          toast.error("can't send comment");
+      }
+     
       setSelfComments([
         ...selfComments,
-        { id: 1, text: comment.value, user: { userName: "laa" } }
+        {
+          id: Math.floor(Math.random() * 100),
+          text: comment.value,
+          user: { userName: meQuery.me.userName }
+        }
       ]);
-    }
-    return;
-  };
-  console.log(comments);
+      comment.setValue("");
 
+    }
+  };
+
+  function createdAtParsed (createdAt){
+     return createdAt.substring(0,10)+"  "+createdAt.substring(11, 19);
+  }
+  
   return (
     <PostPresenter
       author={author[0]}
@@ -77,7 +93,7 @@ const PostContainer = ({
       caption={caption}
       isLiked={isLikedS}
       comments={comments}
-      createdAt={createdAt}
+      createdAt={createdAtParsed(createdAt)}
       newComment={comment}
       setIsLiked={setIsLiked}
       setLikeCount={setLikeCount}
