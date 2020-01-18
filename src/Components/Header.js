@@ -112,7 +112,6 @@ export default withRouter(({ history }) => {
         }
 
           <HeaderLink to="/">
-            <Message />
           </HeaderLink>
         </HeaderColumn>
       </HeaderWrapper>
