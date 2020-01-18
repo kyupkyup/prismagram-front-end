@@ -64,6 +64,7 @@ const Posts = styled.div`
 
 
 
+
 export default ({loading, data, logOut}) =>{
     if (loading) {
         console.log(data);

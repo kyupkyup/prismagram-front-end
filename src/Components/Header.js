@@ -100,9 +100,7 @@ export default withRouter(({ history }) => {
             <Compass />
           </HeaderLink>
 
-        {loading &&<Loader/> }
-        {
-          data && data.me ? (         
+        {loading && data && data.me ? (         
           <HeaderLink to={data.me.userName}>
             <Person />
           </HeaderLink> 
