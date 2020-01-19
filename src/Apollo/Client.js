@@ -4,7 +4,7 @@ export default new ApolloClient({
   uri:
     process.env.NODE_ENV === "development"
       ? "http://localhost:4000"
-      : "https://prismagram-kyungyup-6d76e5222b.herokuapp.com/prismagram/prod",
+      : "https://prismagram-kyungyup-6d76e5222b.herokuapp.com",
 
   clientState: {
     defaults,
