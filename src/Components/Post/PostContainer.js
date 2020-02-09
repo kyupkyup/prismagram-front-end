@@ -5,7 +5,7 @@ import useInput from "../../Hooks/useInput";
 import { useMutation, useQuery } from "react-apollo-hooks";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
 import { toast } from "react-toastify";
-import { ME } from "../../SharedQueries"
+import { ME } from "../../SharedQueries";
 const PostContainer = ({
   id,
   author,
@@ -54,19 +54,18 @@ const PostContainer = ({
     }
   };
 
-  const onKeyPress = async(event) => {
+  const onKeyPress = async event => {
     const { which } = event;
 
     if (which === 13) {
       event.preventDefault();
 
-      try{
-          await addCommentMutation();
+      try {
+        await addCommentMutation();
+      } catch {
+        toast.error("can't send comment");
       }
-      catch{
-          toast.error("can't send comment");
-      }
-     
+
       setSelfComments([
         ...selfComments,
         {
@@ -76,14 +75,13 @@ const PostContainer = ({
         }
       ]);
       comment.setValue("");
-
     }
   };
 
-  function createdAtParsed (createdAt){
-     return createdAt.substring(0,10)+"  "+createdAt.substring(11, 19);
+  function createdAtParsed(createdAt) {
+    return createdAt.substring(0, 10) + "  " + createdAt.substring(11, 19);
   }
-  
+
   return (
     <PostPresenter
       author={author[0]}
